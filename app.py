@@ -36,12 +36,19 @@ st.write("""
 st.info("※ OpenAI APIキー（環境変数 `OPENAI_API_KEY`）が必要です。モデルは `gpt-4o-mini` を既定使用します。")
 
 
-def _init_llm() -> ChatOpenAI:
+def _get_api_key() -> str:
+    if "OPENAI_API_KEY" in st.secrets:
+        return st.secrets["OPENAI_API_KEY"]
+
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        raise RuntimeError("環境変数 OPENAI_API_KEY が設定されていません。")
+        raise RuntimeError("OPENAI_API_KEY が未設定です。Streamlit Cloud は secrets に設定してください。")
 
-    return ChatOpenAI(model="gpt-4o-mini", api_key=api_key, temperature=0)
+    return api_key
+
+
+def _init_llm() -> ChatOpenAI:
+    return ChatOpenAI(model="gpt-4o-mini", api_key=_get_api_key(), temperature=0)
 
 # ---------------------------
 # ラジオボタン（専門家選択）
