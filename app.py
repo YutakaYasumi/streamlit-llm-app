@@ -10,9 +10,6 @@
 import os
 from typing import Literal
 
-import streamlit as st
-from dotenv import load_dotenv
-
 # LangChain（Lesson8相当：ChatPromptTemplate + LLM + StrOutputParser）
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
