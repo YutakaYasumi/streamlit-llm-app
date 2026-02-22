@@ -9,11 +9,6 @@
 
 import streamlit as st
 
-
-# ========= 専門家の定義（A / B） =========
-# 必要に応じて任意の専門家へ差し替え可
-ExpertKey = Literal["A", "B"]
-
 EXPERT_SYSTEM_MESSAGES = {
     # A: 「IT導入・業務改革のプロジェクトマネージャー（PM）」
     "A": (
