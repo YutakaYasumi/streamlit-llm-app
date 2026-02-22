@@ -10,24 +10,6 @@
 import streamlit as st
 
 
-# ========= 事前準備 =========
-load_dotenv()  # .env の OPENAI_API_KEY をロード
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-# LangChain の LLM（OpenAI Chat）を初期化するヘルパー
-def _init_llm(model_name: str = "gpt-4o-mini", temperature: float = 0.2) -> ChatOpenAI:
-    """
-    OpenAI Chat モデルを初期化して返す。
-    - model_name は軽量モデル（gpt-4o-mini）を既定に設定。
-    - 企業/学習環境によっては他モデル名に置き換えてください。
-    """
-    if not OPENAI_API_KEY:
-        raise RuntimeError(
-            "OPENAI_API_KEY が環境変数に設定されていません。'.env' もしくは環境変数で設定してください。"
-        )
-    return ChatOpenAI(model=model_name, temperature=temperature, api_key=OPENAI_API_KEY)
-
-
 # ========= 専門家の定義（A / B） =========
 # 必要に応じて任意の専門家へ差し替え可
 ExpertKey = Literal["A", "B"]
