@@ -7,13 +7,7 @@
 #  - 画面にアプリ概要・操作説明を明示表示
 # ------------------------------------------------------------
 
-import os
-from typing import Literal
-
-# LangChain（Lesson8相当：ChatPromptTemplate + LLM + StrOutputParser）
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
+import streamlit as st
 
 
 # ========= 事前準備 =========
