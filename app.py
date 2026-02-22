@@ -7,6 +7,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
+load_dotenv()
 
 env_dir = Path(__file__).resolve().parent
 dotenv_path = env_dir / ".env"
