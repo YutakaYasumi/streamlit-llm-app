@@ -1,11 +1,17 @@
 import os
 import streamlit as st
 from typing import Literal
+from pathlib import Path
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
-load_dotenv()
+
+env_dir = Path(__file__).resolve().parent
+dotenv_path = env_dir / ".env"
+if not dotenv_path.exists():
+    dotenv_path = env_dir.parent / ".env"
+load_dotenv(dotenv_path=dotenv_path)
 
 # ---------------------------
 # アプリ設定
