@@ -2,6 +2,11 @@ import os
 import streamlit as st
 from typing import Literal
 
+# --- LangChain（Lesson8相当：Prompt → LLM → Parser の最小チェーン） ---
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+
 # ---------------------------
 # アプリ設定
 # ---------------------------
