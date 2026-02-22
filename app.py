@@ -30,7 +30,7 @@ EXPERT_SYSTEM_MESSAGES = {
 
 
 # ========= 重要：要件の関数 =========
-def ask_llm_by_role(input_text: str, role_key: ExpertKey) -> str:
+def ask_llm_by_role(input_text: str) -> str:
     """
     要件:
       - 「入力テキスト」と「ラジオボタンの選択値（A/B）」を引数に取り、
