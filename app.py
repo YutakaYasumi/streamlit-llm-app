@@ -1,6 +1,9 @@
 import os
 import streamlit as st
 from typing import Literal
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import ChatOpenAI
 
 
 # ---------------------------
@@ -24,6 +27,14 @@ st.write("""
 """)
 
 st.info("※ OpenAI APIキー（環境変数 `OPENAI_API_KEY`）が必要です。モデルは `gpt-4o-mini` を既定使用します。")
+
+
+def _init_llm() -> ChatOpenAI:
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise RuntimeError("環境変数 OPENAI_API_KEY が設定されていません。")
+
+    return ChatOpenAI(model="gpt-4o-mini", api_key=api_key, temperature=0)
 
 # ---------------------------
 # ラジオボタン（専門家選択）
