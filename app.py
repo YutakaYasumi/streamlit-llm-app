@@ -5,14 +5,14 @@ from typing import Literal
 # ---------------------------
 # アプリ設定
 # ---------------------------
-st.title("サンプルアプリ③: LLM専門家モード切替デモ")
+st.title("サンプルアプリ: LLM専門家モード切替デモ")
 
 # 概要と操作方法
 st.write("##### 概要")
 st.write("""
 - 入力フォームにテキストを入力し、ラジオボタンで **LLMの専門家ロール（A/B）** を選択します。  
 - 選択ロールに応じて **システムメッセージ（役割指示）を切り替え**、LangChain 経由で LLM にプロンプトを渡して回答を表示します。  
-- 実装は **ChatPromptTemplate → Chat LLM → StrOutputParser** の最小チェーン（Lesson8相当）です。
+- ロールAは「IT導入/業務改革のプロジェクトマネージャー」、ロールBは「データアナリスト/BIコンサルタント」を想定しています。
 """)
 
 st.write("##### 操作方法")
@@ -67,14 +67,6 @@ EXPERT_SYSTEM_MESSAGES = {
     ),
 }
 
-def _init_llm(model_name: str = "gpt-4o-mini", temperature: float = 0.2) -> ChatOpenAI:
-    """
-    OpenAI Chat モデルを初期化して返す。
-    - OPENAI_API_KEY は環境変数から取得（未設定なら例外）
-    """
-    if not os.getenv("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY が環境変数に設定されていません。")
-    return ChatOpenAI(model=model_name, temperature=temperature)
 
 # ---------------------------
 # 要件の関数：
