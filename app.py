@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from typing import Literal
 from pathlib import Path
+from openai import AuthenticationError
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
@@ -36,29 +37,29 @@ st.write("""
 st.info("※ OpenAI APIキー（環境変数 `OPENAI_API_KEY`）が必要です。モデルは `gpt-4o-mini` を既定使用します。")
 
 
-def _get_api_key() -> str:
+def _get_api_key() -> tuple[str, str]:
     candidates = []
 
     if "OPENAI_API_KEY" in st.secrets:
-        candidates.append(st.secrets["OPENAI_API_KEY"])
+        candidates.append((st.secrets["OPENAI_API_KEY"], "st.secrets.OPENAI_API_KEY"))
     if "openai_api_key" in st.secrets:
-        candidates.append(st.secrets["openai_api_key"])
+        candidates.append((st.secrets["openai_api_key"], "st.secrets.openai_api_key"))
 
     for section_name in ("openai", "OPENAI"):
         if section_name in st.secrets:
             section = st.secrets[section_name]
             if isinstance(section, dict):
                 if "api_key" in section:
-                    candidates.append(section["api_key"])
+                    candidates.append((section["api_key"], f"st.secrets.{section_name}.api_key"))
                 if "OPENAI_API_KEY" in section:
-                    candidates.append(section["OPENAI_API_KEY"])
+                    candidates.append((section["OPENAI_API_KEY"], f"st.secrets.{section_name}.OPENAI_API_KEY"))
 
-    candidates.append(os.getenv("OPENAI_API_KEY"))
-    candidates.append(os.getenv("openai_api_key"))
+    candidates.append((os.getenv("OPENAI_API_KEY"), "env:OPENAI_API_KEY"))
+    candidates.append((os.getenv("openai_api_key"), "env:openai_api_key"))
 
-    for value in candidates:
+    for value, source in candidates:
         if value and str(value).strip():
-            return str(value).strip()
+            return str(value).strip(), source
 
     raise RuntimeError(
         "OPENAI_API_KEY が未設定です。"
@@ -67,7 +68,8 @@ def _get_api_key() -> str:
 
 
 def _init_llm() -> ChatOpenAI:
-    return ChatOpenAI(model="gpt-4o-mini", api_key=_get_api_key(), temperature=0)
+    api_key, _ = _get_api_key()
+    return ChatOpenAI(model="gpt-4o-mini", api_key=api_key, temperature=0)
 
 # ---------------------------
 # ラジオボタン（専門家選択）
@@ -148,5 +150,12 @@ if st.button("実行"):
             st.success("回答を取得しました。")
             st.write("##### 回答")
             st.write(answer)
+        except AuthenticationError:
+            _, key_source = _get_api_key()
+            st.error(
+                "OpenAI 認証エラー（401）: APIキーが無効です。"
+                f"現在の参照元: {key_source}。"
+                "有効なキーに更新し、再実行してください。"
+            )
         except Exception as e:
             st.error(f"エラーが発生しました: {e}")
